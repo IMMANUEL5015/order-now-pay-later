@@ -18,3 +18,27 @@ export async function login(request: any, reply: any) {
         data: result
     });
 }
+
+export async function get_credit_score(request: any, reply: any) {
+    if (!request.user || request.user.role !== 'business') {
+        throw new Error('You are not allowed to perform this action.');
+    }
+    const credit_score = await business.get_credit_score(request);
+    reply.code(200).send({
+        status: 'Success', 
+        message: 'Successful',
+        data: {credit_score}
+    });
+}
+
+export async function get_order_details(request: any, reply: any) {
+    if (!request.user || request.user.role !== 'business') {
+        throw new Error('You are not allowed to perform this action.');
+    }
+    const order_details = await business.get_order_details(request);
+    reply.code(200).send({
+        status: 'Success', 
+        message: 'Successful',
+        data: {order_details}
+    });
+}

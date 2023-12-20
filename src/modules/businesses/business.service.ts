@@ -1,6 +1,9 @@
+import Transaction from "../../mongodb/models/transactions";
 import { compare, hash, sign } from "../../utilities/auth";
 import db from "../db";
 import { create } from "./business.dto";
+import {endOfDay} from 'date-fns/endOfDay'
+import {startOfDay} from 'date-fns/startOfDay'
 
 const business = {
     create: async (data: create) => {
@@ -51,7 +54,58 @@ const business = {
         });
 
         return token;
-    }
+    },
+
+    get_credit_score: async (request: any) => {
+        const num_of_transactions = await Transaction.countDocuments({
+            business_id: request.user.id,
+            status: 'paid'
+        });
+
+        const percentage = (num_of_transactions * 100);
+
+        const transactions = await Transaction.find({
+            business_id: request.user.id,
+            status: 'paid'
+        }).select('amount').lean();
+
+        const total = transactions.reduce((prev, curr) => prev + curr.amount, 0);
+
+        const credit_score = total / percentage;
+
+        return credit_score;
+    },
+
+    get_order_details: async (request: any) => {
+        const result = {
+            number_of_orders: 0,
+            number_of_orders_today: 0,
+            amount_of_orders: 0,
+            amount_of_orders_today: 0
+        };
+
+        const transactions = await Transaction.find({
+            business_id: request.user.id,
+        }).select('amount').lean();
+
+        const total = transactions.reduce((prev, curr) => prev + curr.amount, 0);
+
+        const transactions_today = await Transaction.find({
+            created_at: {
+              $gte: startOfDay(new Date()),
+              $lte: endOfDay(new Date())
+            }
+          }).select('amount').lean();
+        const total_today = transactions_today.reduce((prev, curr) => prev + curr.amount, 0);
+
+        result.amount_of_orders = total;
+        result.number_of_orders = transactions.length;
+
+        result.amount_of_orders_today = total_today;
+        result.number_of_orders_today = transactions_today.length;
+
+        return result;
+    },
 };
 
 export default business
