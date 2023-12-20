@@ -1,0 +1,68 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Business {
+  id                  Int             @id @default(autoincrement())
+  name                String          @unique
+  credit_score        Int          
+  email               String          @unique
+  password            String          
+  departments         Department[]
+  created_at          DateTime        @default(now())
+  updated_at          DateTime        @updatedAt
+
+  @@map("businesses")
+}
+
+model Department {
+  id                  Int             @id @default(autoincrement())
+  name                String          
+  business            Business        @relation(fields: [business_id], references: [id])
+  business_id         Int             
+  orders              Order[]
+  email               String          @unique
+  password            String          
+  created_at          DateTime        @default(now())
+  updated_at          DateTime        @updatedAt
+
+  @@map("departments")
+}
+
+model Order {
+  id                  Int             @id @default(autoincrement())
+  amount              Int            
+  department_id       Int     
+  transaction_id      String          
+  department          Department      @relation(fields: [department_id], references: [id])
+  item                String    
+  paid_tax            Boolean         @default(false)          
+  quantity            Int  
+  created_at          DateTime        @default(now())
+  updated_at          DateTime        @updatedAt
+
+  @@map("orders")
+} 
+
+// model Transaction {
+//   id                  Int             @id @default(autoincrement())
+//   amount              BigInt 
+//   business            Business        @relation(fields: [business_id], references: [id])
+//   business_id         Int
+//   order               Order           @relation(fields: [order_id], references: [id])
+//   order_id            Int          
+//   reference           String          @unique 
+//   status              String                 
+//   created_at          DateTime        @default(now())
+//   updated_at          DateTime        @updatedAt
+
+//   @@map("transactions")
+// }

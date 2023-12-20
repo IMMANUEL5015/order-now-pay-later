@@ -5,7 +5,14 @@
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist && swc ./src -d dist",
-    "start": "node dist/server.js"
+    "db:console": "docker compose run postgres psql -h postgres -U postgres -d order_now_pay_later",
+    "db:migrate": "knex migrate:latest",
+    "docker:db:migrate": "docker compose run backend npm db:migrate",
+    "docker:db:migrate:undo": "docker compose run backend npx knex migrate:down",
+    "rebuild:be": "docker-compose down && docker-compose up --build",
+    "start": "node dist/server.js",
+    "start:docker": "npm run build && npm run dev",
+    "dev": "tsnd --respawn --transpile-only --exit-child src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,11 +26,22 @@
     "@typescript-eslint/eslint-plugin": "^6.14.0",
     "@typescript-eslint/parser": "^6.14.0",
     "eslint": "^8.56.0",
+    "nodemon": "^3.0.2",
+    "prisma": "^5.7.0",
     "rimraf": "^5.0.5",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@prisma/client": "^5.7.0",
+    "@types/bcrypt": "^5.0.2",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.3.1",
-    "fastify": "^4.25.1"
+    "fastify": "^4.25.1",
+    "joi": "^17.11.0",
+    "knex": "^3.1.0",
+    "mongoose": "^8.0.3",
+    "pg": "^8.11.3"
   }
 }

@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:16
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: order_now_pay_later
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - postgres_db:/var/lib/postgresql/data/
+
+  mongo: 
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=immanuel
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - mongo-db:/data/db
+
+volumes:
+  mongo-db:
+  postgres_db:
