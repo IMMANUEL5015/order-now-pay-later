@@ -1,4 +1,4 @@
-import { hash } from "../../utilities/auth";
+import { compare, hash, sign } from "../../utilities/auth";
 import db from "../db";
 import { create } from "./business.dto";
 
@@ -27,6 +27,30 @@ const business = {
         });
         
         return result;
+    },
+
+    login: async (data: create) => {
+        const business = await db.business.findFirst({
+            where: {email: data.email},
+        });
+
+        if (!business) {
+            throw new Error('Business email or password does not exist.');
+        }
+
+        const match = await compare(data.password, business.password);
+        if (!match) {
+            throw new Error('Business email or password does not exist.');
+        }
+
+        const token = await sign({
+            email: business.email,
+            id: business.id,
+            name: business.name,
+            role: 'business'
+        });
+
+        return token;
     }
 };
 
