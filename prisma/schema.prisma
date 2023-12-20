@@ -13,7 +13,6 @@ datasource db {
 model Business {
   id                  Int             @id @default(autoincrement())
   name                String          @unique
-  credit_score        Int          
   email               String          @unique
   password            String          
   departments         Department[]
@@ -51,18 +50,3 @@ model Order {
 
   @@map("orders")
 } 
-
-// model Transaction {
-//   id                  Int             @id @default(autoincrement())
-//   amount              BigInt 
-//   business            Business        @relation(fields: [business_id], references: [id])
-//   business_id         Int
-//   order               Order           @relation(fields: [order_id], references: [id])
-//   order_id            Int          
-//   reference           String          @unique 
-//   status              String                 
-//   created_at          DateTime        @default(now())
-//   updated_at          DateTime        @updatedAt
-
-//   @@map("transactions")
-// }

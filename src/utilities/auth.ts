@@ -37,6 +37,4 @@ export const protect = async function (request: any, reply: any, done: any) {
     const user = await verify(token);
     
     request.user = user;
-
-    done();
 }
