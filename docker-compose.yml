@@ -29,6 +29,7 @@ services:
       - postgres
     environment:
       DATABASE_URL: postgres://postgres@postgres/order_now_pay_later
+      SECRET: 'I-AM-A-SON-OF-EARTH-AND-STARRY-HEAVEN'
       PORT: 5000
 
 volumes:

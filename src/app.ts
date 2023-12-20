@@ -7,7 +7,7 @@ import orders from './modules/orders/order.route';
 import pay_tax from './jobs';
 
 // Remember to change localhost to mongo
-mongoose.connect(process.env.MONGO_URI!)
+mongoose.connect('mongodb://immanuel:password@mongo:27017?authSource=admin')
   .then(res => console.log('Connected to mongodb database.'))
   .catch(err => console.log(err.message))
 
