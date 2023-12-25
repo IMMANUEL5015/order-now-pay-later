@@ -25,7 +25,7 @@ const business = {
                 name: data.name,
                 email: data.email,
                 password: hashed,
-                credit_score: 0
+                // credit_score: 0
             }
         });
         
